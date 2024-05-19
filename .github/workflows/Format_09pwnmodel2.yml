@@ -1,0 +1,30 @@
+name: 09pwnmodel2 format
+
+on:
+  push:
+    paths:
+      - "modelscripts/09pwnmodel2/**"
+      - ".github/workflows/format_notebooks.yml"
+      - ".github/workflows/Format_09pwnmodel2.yml"
+      - "pyproject.toml"
+    branches:
+      - main
+  pull_request:
+    paths:
+      - "modelscripts/09pwnmodel2/**"
+      - ".github/workflows/format_notebooks.yml"
+      - ".github/workflows/Format_09pwnmodel2.yml"
+      - "pyproject.toml"
+    branches:
+      - main
+  schedule:
+    # To check against updated versions of dependencies
+    - cron: "0 9 * * 3"  # Run every Wednesday at 9:00 UTC
+    - cron: "0 9 * * 5"  # Run every Friday at 9:00 UTC
+
+jobs:
+  test-notebooks:
+    uses: ./.github/workflows/format_notebooks.yml
+    with:
+      project-folder: "09pwnmodel2"
+    secrets: inherit

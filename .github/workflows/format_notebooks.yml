@@ -1,0 +1,33 @@
+name: Format notebooks
+
+on:
+  workflow_call:
+    inputs:
+      project-folder:
+        required: true
+        type: string
+
+jobs:
+    test-format:
+      runs-on: ubuntu-latest
+      concurrency:
+        # Cancel any previous runs with the same workflow name and branch
+        group: ${{ inputs.project-folder }}-${{ github.workflow }}-${{ github.ref }}
+        cancel-in-progress: true
+      strategy:
+        fail-fast: false
+      env:
+        HATCH_VERBOSE: 1
+      steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' 
+          check-latest: true
+      - name: Install hatch
+        run: python -m pip install pipx && pipx install hatch
+      - name: Remove and create hatch environments
+        run: hatch env remove lintformat && hatch env create lintformat
+      - name: Check the format of modelscripts with ruff
+        run: hatch run lintformat:ruff check modelscripts/${{ inputs.project-folder }}

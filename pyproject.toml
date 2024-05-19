@@ -1,0 +1,109 @@
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling>=1.8.0"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["modelscripts"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[project]
+authors = [
+  { name = "Bas des Tombe", email = "bas.des.tombe@pwn.nl" },
+  { name = "Onno Ebbens", email = "o.ebbens@artesia-water.nl" },
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX",
+  "Operating System :: Unix",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Utilities",
+]
+description = "Groundwatermodels that are part of the NHFLO modeling environment."
+keywords = ["NHFLO"]
+license = { file = "LICENSE.txt" }
+maintainers = [
+  { name = "Bas des Tombe", email = "bas.des.tombe@pwn.nl" },
+  { name = "Onno Ebbens", email = "o.ebbens@artesia-water.nl" },
+]
+name = "nhflomodels"
+readme = "README.md"
+requires-python = ">=3.11"
+version = "0.2.0"
+
+dependencies = [
+  "ipykernel",
+  "joblib",
+  "jupyter",
+  "nhflodata @ git+https://github.com/NHFLO/data.git@main",
+  "nlmod[full]",
+  "pip",                                                    # Required when installer is uv
+]
+
+[project.optional-dependencies]
+09pwnmodel2 = [
+  "nhflotools @ git+https://github.com/NHFLO/tools.git@main",
+  "nlmod[full] @ git+https://github.com/gwmod/nlmod.git@dev",
+  "pyarrow",
+  "pykrige",
+  "seaborn",
+]
+common = ["flopy", "geopandas", "matplotlib", "numpy", "openpyxl", "pandas", "shapely", "xarray"]
+lintformat = ["nbconvert", "nbformat", "ruff"]
+test = ["nbconvert", "nbformat", "pytest"]
+
+[tool.hatch.envs.lintformat]
+detached = true
+features = ["lintformat"]
+installer = "uv"
+
+[tool.hatch.envs.lintformat.scripts]
+clearnb = [
+]
+format = ["clearnb", "ruff check --fix modelscripts", "ruff format modelscripts"]
+lint = ["ruff check modelscripts"]
+
+[tool.hatch.envs.default]
+installer = "uv"
+python = "3.11"
+
+[tool.hatch.envs.localdev]
+env-vars = { rel_path_nb = "", JUPYTER_PLATFORM_DIRS = "1" , HATCH_VERBOSE = "1" }
+features = ["09pwnmodel2", "common", "lintformat", "test"]
+post-install-commands = [
+  "python -c \"import nlmod; nlmod.download_mfbinaries()\"",
+  "python -m pip install -e ../../hydropandas --config-settings editable_mode=strict",
+  "python -m pip install -e ../../nlmod --config-settings editable_mode=strict",
+  "python -m pip install -e ../data --config-settings editable_mode=strict",
+  "python -m pip install -e ../tools --config-settings editable_mode=strict",
+  "python -m pip install \"netCDF4>=1.6.5\"",
+  "python -m pip list",
+]
+template = "commonnotebooks"
+
+[tool.hatch.envs.commonnotebooks]
+installer = "uv"
+post-install-commands = [
+  "python -c \"import nlmod; nlmod.download_mfbinaries()\"",
+  "python -m pip install \"netCDF4>=1.6.5\"",
+  "python -m pip list",
+]
+
+[tool.hatch.envs.commonnotebooks.scripts]
+jnb = "jupyter lab --notebook-dir modelscripts/{env:rel_path_nb:}"
+test = "pytest --notebook-path {env:rel_path_nb:} -v"
+
+[tool.hatch.envs.09pwnmodel2]
+env-vars = { rel_path_nb = "09pwnmodel2", JUPYTER_PLATFORM_DIRS = "1" }
+features = ["09pwnmodel2", "test"]
+template = "commonnotebooks"
+
+[tool.hatch.envs.hatch-static-analysis]
+config-path = "ruff.toml"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
