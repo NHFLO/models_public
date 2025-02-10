@@ -1,0 +1,14 @@
+# Modelstudie
+## Methode en modeleisen
+Het grondwatermodel dient een MODFLOW 6 model te zijn aangestuurd vanuit Python notebooks waarbij zoveel mogelijk gebruik wordt gemaakt van nlmod functies (github.com/gwmod/nlmod). De notebooks met grondwatermodellen zijn ondergebracht op de deels besloten website github.com/NHFLO. Op deze website staan de reeds opgeleverde grondwatermodellen in de vorm van notebooks (github.com/NHFLO/models repository), PWN-HHNK-eigen data (github.com/NHFLO/data repository) en helperscripts (github.com/NHFLO/tools repository). Deze methodiek legt enkele beperkingen en middelen op aan de manier van werken en het opgeleverde product:
+-	De modelleurs krijgen toegang tot de afgeschermde models repository.
+-	Modelresultaten gepresenteerd in de rapportage dienen in het notebook gegenereerd te worden.
+-	Een Python-environment dient opgeleverd te worden dat werkt specifiek voor dit model. 
+-	Het model dient gebruik te maken van meest recente versie van nlmod.
+-	Het model en ondersteunende scripts worden eigendom van NHFLO.
+-	Het modelgrid dient gedriscretiseerd te zijn met vertices (vertex grid). Met dit gridtype kunnen lokale verfijningen worden toegepast en enkele helperscripts werken enkel met dit type grid.
+-	Het model dient opgeleverd te worden in de vorm van een Pull Request naar de main branch van de models repository. Deze Pull Request wordt aangemaakt bij de start van het project en wordt door de modelleurs regelmatig bijgewerkt middels commits. Deze manier van werken zorgt ervoor dat de modelleur goed op afstand kan worden bijgestaan.
+-	De werking van de modellen in de models repository worden bij elke wijziging getoetst (rode en groene vlaggetjes d.m.v. Continious Integration). Dit garandeert de werking van het model na wijzigingen in het model of in een van de scripts waar het model gebruik van maakt.
+-   GIS bestanden worden aangeleverd in geojson format en de data in tabel-vorm wordt aangeleverd in csv format. Zodat de aanpassingen via GIT te volgen zijn.
+-	Bij beperkte aanpassingen aan een enkele bodemlaag: De aangepaste bodemlagen dienen beschikbaar te worden gemaakt als onvergridde GIS-bestanden in de data repository. Het vergridden van de bodemlagen gebeurt als onderdeel van de Python notebooks. Hiervoor kan gebruik worden gemaakt van reeds bestaande nlmod functies en scripts uit de tools repository.
+-	Bij aanpassingen aan meerdere bodemlagen dient er meer te worden opgeleverd. Bij aanpassingen aan de bodem van het NHD kunnen de bestaande GIS-bestanden in de data-repository worden aangepast. Wanneer er buiten het NHD bodemparameters gewijzigd dienen te worden t.o.v. REGISII, dienen de aangepaste Kh, Kv en bottoms per laag als polygoon voor het aangepaste gebied te worden opgeleverd. Detail kan worden toegevoegd met lineaire interpolatie of Kriging. Hiervoor kan gebruik worden gemaakt van scripts uit de tools repository.
