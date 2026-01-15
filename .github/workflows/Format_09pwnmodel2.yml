@@ -6,7 +6,6 @@ on:
       - "modelscripts/09pwnmodel2/**"
       - ".github/workflows/format_notebooks.yml"
       - ".github/workflows/Format_09pwnmodel2.yml"
-      - "pyproject.toml"
     branches:
       - main
   pull_request:
@@ -14,13 +13,11 @@ on:
       - "modelscripts/09pwnmodel2/**"
       - ".github/workflows/format_notebooks.yml"
       - ".github/workflows/Format_09pwnmodel2.yml"
-      - "pyproject.toml"
     branches:
       - main
   schedule:
     # To check against updated versions of dependencies
-    - cron: "0 9 * * 3"  # Run every Wednesday at 9:00 UTC
-    - cron: "0 9 * * 5"  # Run every Friday at 9:00 UTC
+    - cron: "0 9 * * 1"  # Run every Monday at 9:00 UTC
 
 jobs:
   test-notebooks:
